@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>가품 페이지</title>
+<link rel="stylesheet" type="text/css" href="resources/css/common.css" />
+<style>
+/* body색상과 높이는 임의로 지정했으며 팝업과 구분 짓기위해 지정해두었습니다.  */
+body {background-color:#313131; height:100vh;}
+
+.popup_container {position: absolute; z-index: 2; width: 85%; left: 50%; margin-left: -42.5%; background-color: #fff; padding: 15px 0 20px; top:50%;}
+.text_box, .btn_box {width: 75%; margin:auto;}
+
+.text_box {font-size:14px; margin-bottom:15px;}
+
+.btn_box .btn_black {width:100%; padding:5px 0;}
+</style>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+$(document).ready(function() {
+	$(".popup_container").css("margin-top", "-"+ $(".popup_container").outerHeight()/2 + "px");
+});
+</script>
+</head>
+<body>
+<div class="popup_container">
+	<div class="text_box">
+		카메라의 QR코드 스캔 기능이 꺼져있습니다.
+		카메라 상태를 확인 후 다시 QR코드를 스캔해
+		주세요.
+	</div>
+	<div class="btn_box">
+		<a class="btn_black">확인</a>
+	</div>
+</div>
+</body>
+</html>

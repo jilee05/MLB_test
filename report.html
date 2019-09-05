@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>가품 페이지</title>
+<link rel="stylesheet" type="text/css" href="resources/css/common.css" />
+<style>
+.report_header {background-color: #000; color: #fff; text-align: center; padding: 10px 0; font-size: 15px;}
+
+.report_body {width: 90%; margin: auto; overflow-y: auto; overflow-x:hidden;}
+.report_body .report_msg_box {width: 100%; padding: 30px 0; height: calc(100% - 60px);}
+.report_body .report_msg_box .report_msg_line {font-size: 0; width: 100%;}
+
+.report_body .report_msg_box .report_msg_line.left_msg {text-align:left; font-size: 16px;}
+.report_body .report_msg_box .report_msg_line.left_msg a {background-color:#f7f7f7; color:#656565; border: 1.3px solid #f7f7f7; border-left:none; padding:5px 15px; position:relative; display:inline-block; margin:10px 0; margin-left:16px;}
+
+.report_body .report_msg_box .report_msg_line.right_msg {text-align:right; font-size: 16px;}
+.report_body .report_msg_box .report_msg_line.right_msg a {background-color:#000; color:#fff; border: 1.3px solid #000; border-right:none; padding:5px 15px; position:relative; display:inline-block; margin:10px 0; margin-right:16px;}
+
+.report_footer {width: 90%; margin: auto; padding-bottom:20px;}
+.report_footer .button_box .selectBtn.btn_black {width: 96%; padding: 10px 2%; margin-bottom: 10px;}
+.report_footer .input_box {font-size:0; width:100%; height:53px;}
+.report_footer .input_box .addFile {display:inline-block; width:50px; height:50px; cursor:pointer; border: 1.5px solid #000; margin-right:10px; float:left;}
+.report_footer .input_box .addFile.default {background-color:#000; background-image: url("resources/img/default_camera.png"); background-repeat: no-repeat; background-position: center; background-size: 25px auto;}
+.report_footer .input_box .addFile.camera {background-color:#fff; background-image: url("resources/img/black_camera.png"); background-repeat: no-repeat; background-position: center; background-size: 25px auto; display:none;}
+.report_footer .input_box .addFile.myImage {background-color:#fff; background-image: url("resources/img/my_image.png"); background-repeat: no-repeat; background-position: center; background-size: 25px auto; display:none;}
+
+.report_footer .input_box #cameraImage, .report_footer .input_box #folderImage {display:none;}
+.report_footer .input_box #createMessageBox {width: calc(100% - 86px); border: 1.5px solid #000; outline: none; vertical-align: top; font-size: 17px; float: right; height: 26px; padding:12px 10px; resize: none;}
+
+.text {display:inline-block; position:relative;}
+
+</style>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+
+/*
+ * 레이아웃 브라우저 사이즈에 맞춰 사이징
+ * container : 화면 높이
+ * body : 화면높이 - (헤더 높이 + 푸터 높이)
+ * footer : 버튼 갯수에 맞춰서 input박스 리사이징
+ */
+function BoxSizing() {
+	//가품신고 컨테이너 높이 지정
+	$(".report_container").height($(window).height());
+	
+	var headerHeight = $(".report_header").outerHeight();
+	var footerHeight = $(".report_footer").outerHeight();
+	var parentHeight = $(".report_container").outerHeight();
+	
+	//메세지 입력 라인 버튼 갯수 및 넓이 구하기
+	var addFileWidth = 0;
+	$.each($(".addFile"), function(index, value) {
+		if ($(value).css("display") != "none") {
+			addFileWidth += ($(value).outerWidth() + parseInt($(value).css("margin-right")));
+		}
+	});
+	
+	//아래쪽 입력 부분 사이징
+	$("#createMessageBox").width($(".report_footer").width() - addFileWidth - 25); // 25 : padding 10 * 2 + border 1.5 * 2 + margin 1 * 2
+	
+	//리포트 메세지 박스부분 사이징
+	$(".report_body").height(parentHeight - (headerHeight + footerHeight));
+	//리포트 메세지 박스 스크롤 최하단으로 이동
+	$(".report_body").scrollTop($(".report_body")[0].scrollHeight);
+}
+
+ /*
+  * msg : 메세지
+  * direction : 왼쪽 메세지 => left, 오른쪽 메세지 => right
+  */
+ function createMessageBox(msg, direction) {
+	 var msgClass = direction + "_msg";
+	 var arrowSrc = "resources/img/"+ direction +"_msg.png";
+	 
+	 return $('<li class="report_msg_line '+ msgClass +'">'+
+		'<a class="report_msg">'+
+			msg +
+			'<span class="msg_arrow"></span>'+
+		'</a>'+
+	  '</li>');
+ }
+ 
+/*
+ * msg : 메세지
+ * direction : 메세지 박스 방향
+ * type : 선택형, 입력형 => "select", "input"
+ * answerArray : 선택형일경우 답안 목록 String type 배열
+ */
+function AutoMessaging(msg, direction, type, answerArray) {
+	var msg_wrap = createMessageBox(msg, direction, 0);
+	
+	$(".report_msg_box").append(msg_wrap);
+	
+	var msg_arrw = msg_wrap.find(".msg_arrow"); 
+	
+	var border_left = (direction == "left") ? "16px solid transparent" : "16px solid #000";
+	var border_right = (direction == "left") ? "16px solid #f7f7f7" : "16px solid transparent";
+	var position_left = (direction == "left") ? "0" : "auto";
+	var position_right = (direction == "left") ? "auto" : "0";
+	var margin_left = (direction == "left") ? "-32px" : "0";
+	var margin_right = (direction == "left") ? "0" : "-32px";
+	
+	msg_arrw.css({
+		"border-top" : msg_wrap.find(".report_msg").outerHeight()/2 + "px solid transparent",
+		"border-bottom" : msg_wrap.find(".report_msg").outerHeight()/2 + "px solid transparent",
+		"border-left" : border_left,
+		"border-right" : border_right,
+		"font-size" : "0",
+		"position" : "absolute",
+		"top" : "-1px",
+		"left" : position_left,
+		"right" : position_right,
+		"margin-left" : margin_left,
+		"margin-right" : margin_right
+	});
+
+	var btnBox = $(".button_box");
+	btnBox.empty();
+	
+	if (type == "select") {
+		$("#createMessageBox").attr("readonly", "readonly");
+		
+		$.each(answerArray, function(index, value) {
+			btnBox.append('<a class="selectBtn btn_black">'+ value +'</a>');
+		});
+	} else if (type == "input") {
+		$("#createMessageBox").removeAttr("readonly");
+	}
+	
+	// 리포트 메세지 박스 리사이즈
+	BoxSizing();
+}
+
+
+$(window).on("load", function() {
+	//safari의 경우 페이지 리로딩시 객체의 높이를 바로 캐치하지 못함.
+	//interval을 이용하여 로딩을 체크 해준다.
+	var sizing = setInterval(function() {
+		if ($(".report_footer").height() > 0) {
+			AutoMessaging("해당 제품을 직접 구매 하셨나요?", "left", "select", ["직접 구매.", "구매 대행."]);
+			BoxSizing();
+			
+			$(document).on("click", ".selectBtn", function() {
+				var msg = $(this).html();
+				AutoMessaging(msg, "right");
+			});
+			
+			//카메라 아이콘 펼치는 이벤트
+			var cameraIconFlag = false;
+			$(".addFile").on("click", function() {
+				if (!cameraIconFlag) {
+					$(".default").hide();
+					$(".camera").show();
+					$(".myImage").show();
+					
+					BoxSizing();
+					
+					cameraIconFlag = true;
+				} else {
+					$(".default").show();
+					$(".camera").hide();
+					$(".myImage").hide();
+					
+					BoxSizing();
+					
+					cameraIconFlag = false;
+				}
+			});
+			
+			//이미지 첨부 클릭
+			$(".myImage").on("click", function() {
+				$("#folderImage").trigger("click");
+			});
+			
+			//카메라 이벤트
+			$(".camera").on("click", function() {
+				$("#cameraImage").trigger("click");
+			});
+			
+			clearInterval(sizing);
+		} 
+	});
+});
+
+$(window).on("resize", function() {
+	BoxSizing();
+});
+</script>
+</head>
+<body>
+<div class="report_container">
+	<section class="report_header">
+		<p>가품 신고</p>
+	</section>
+	<section class="report_body">
+		<ul class="report_msg_box">
+		</ul>
+	</section>
+	<section class="report_footer">
+		<div class="button_box"></div>
+		<div class="input_box">
+			<a class="addFile default"></a>
+			<a class="addFile camera"></a>
+			<a class="addFile myImage"></a>
+			<input type="file" id="folderImage">
+			<input type="file" id="cameraImage" capture="camera" accept="image/*">
+			<textarea placeholder="메세지를 입력해주세요." id="createMessageBox" readonly="readonly"></textarea>
+		</div>
+	</section>
+</div>
+</body>
+</html>

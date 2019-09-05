@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>가품 페이지</title>
+<link rel="stylesheet" type="text/css" href="resources/css/common.css" />
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="resources/js/lottie.js"></script>
+</head>
+<body>
+<div id="lottieCanvas" style="width:100%; height:100%; position:absolute;; top:0; left:0; background-color:#000; z-index:999;"></div>
+<script>
+var animation = lottie.loadAnimation({
+    container: document.getElementById("lottieCanvas"), // the dom element that will contain the animation
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'resources/img/lottie/MLB_Loading.json', // the path to the animation json
+});
+</script>
+</body>
+</html>

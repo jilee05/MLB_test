@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>난수 입력</title>
+<link rel="stylesheet" type="text/css" href="resources/css/common.css" />
+<style>
+.code_input_container {width:90%; margin:auto;}
+
+.code_input_section {text-align: center;}
+.code_input_section .important_font, .code_input_section .small_font {margin-bottom:5px;}
+.code_input_section .input_box {width:100%; text-algin:center; margin-top:10px;}
+.code_input_section .input_box input[type=text] {border: none; outline: none; border-bottom: 2px solid #000; text-align: center; font-size: 20px; width: 23px; margin: 0 5px;}
+
+.code_submit_btn_section {width:100%; margin-top:30px;}
+.code_submit_btn_section .code_submit {width:100%; padding:8px 0;}
+</style>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+function maxLengthCheck(object) {
+    if (object.value.length > object.maxLength){
+      object.value = object.value.slice(0, object.maxLength);
+    }    
+}
+
+$(document).ready(function() {
+	//코드 입력 이벤트
+	$(".MLBcode").on("keyup focusout", function() {
+		var value = $(this).val();
+		
+		if (value.length >= parseInt($(this).attr("maxlength"))) {
+	       $(this).val(value.slice(0, parseInt($(this).attr("maxlength"))));
+	       
+	       var nextInput = $(this).next();
+	       
+	       if (nextInput.attr("class") == "MLBcode") {
+	    	   nextInput.focus();
+	       }
+	    }
+	});
+	
+	//submit 버튼 이벤트
+	$(".code_submit").on("click", function() {
+		var finalCode = "";
+		
+		$.each($(".MLBcode"), function(index, value) {
+			var MLBcode = $(value).val();
+			
+			if (typeof MLBcode == "undefined" || MLBcode.length == 0) {
+				return false;
+			}
+			
+			finalCode += MLBcode;
+		});
+		
+		if (finalCode.length < $(".MLBcode").length) {
+			alert("6자리 코드를 모두 입력해주세요.");
+			return;
+		}
+		
+		$("#finalCode").val(finalCode);
+	});
+});
+</script>
+</head>
+<body>
+	<div class="code_input_container">
+		<section class="code_input_section">
+			<p class="important_font">제품을 구매하신 고객이라면,</p>
+			<p class="small_font">스크레치 제거 후, 6자리 입력하여 정품 확인</p>
+			<div class="input_box">
+				<input type="text" class="MLBcode" maxlength="1">
+				<input type="text" class="MLBcode" maxlength="1">
+				<input type="text" class="MLBcode" maxlength="1">
+				<input type="text" class="MLBcode" maxlength="1">
+				<input type="text" class="MLBcode" maxlength="1">
+				<input type="text" class="MLBcode" maxlength="1">
+			</div>
+		</section>
+		<section class="code_submit_btn_section">
+			<a class="btn_black code_submit">확인</a>
+			<input type="hidden" name="finalCode" id="finalCode">
+		</section>
+	</div>
+</body>
+</html>

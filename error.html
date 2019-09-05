@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>가품 페이지</title>
+<link rel="stylesheet" type="text/css" href="resources/css/common.css" />
+<style>
+.error_wrap {width:100%; display:table;}
+.error_wrap .error_container {width:100%; height:100%; display:table-cell; vertical-align:middle; text-align:center;}
+.error_wrap .error_container .point_square {display:inline-block; height:100px; width:100px; border : 1px dashed black;}
+</style>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+$(document).ready(function() {
+	$(".error_wrap").height($(window).height());
+});
+</script>
+</head>
+<body>
+<div class="error_wrap">
+	<div class="error_container">
+		<span class="point_square"></span>
+		<p style="margin: 10px 0; font-weight: bold; font-size: 16px;">Sorry</p>
+		<p style="font-size:14px;">이 제품은 상세페이지가 준비되지 않았습니다.</p>
+	</div>
+</div>
+</body>
+</html>

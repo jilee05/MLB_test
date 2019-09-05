@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>진품페이지</title>
+<link rel="stylesheet" type="text/css" href="resources/css/common.css" />
+<style>
+.result_container {width: 90%; margin:auto;}
+
+.result_lottie_section {width:100%;}
+.result_lottie_section .lottie_table {width:100%; display: table;}
+.result_lottie_section .lottie_table .lottie_td {width:100%; height: 100%; display:table-cell; vertical-align:middle;}
+.result_lottie_section .lottie_table .lottie_td #resultLottie {width:150px; margin:auto; margin-top:30px;}
+
+.contents_section {width: 100%; text-align: center; line-height: 25px; opacity: 0;}
+.contents_section .comment_box {margin-bottom:10px;}
+.contents_section .btn_black {width:100%; padding: 8px 0;}
+.contents_section .btn_black {margin-bottom:10px;}
+.contents_section .btn_black:last-child {margin-bottom:20px;}
+
+.gray_font {line-height:17px;}
+</style>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="resources/js/lottie.js"></script>
+<script>
+$(window).on("load", function() {
+	//화면에 맞게 result_container 높이를 지정해주세요. default : 화면 높이
+	
+	//safari의 경우 페이지 리로딩시 객체의 높이를 바로 캐치하지 못함.
+	//interval을 이용하여 로딩을 체크 해준다.
+	var sizing = setInterval(function() {
+		if ($(".contents_section").outerHeight() > 0) {
+			$(".result_container").height($(window).height());
+			
+			//lottie 영역 구분 높이 지정 :: 전체 높이 - 하단 버튼 영역 높이
+			$(".lottie_table").height($(".result_container").outerHeight() - $(".contents_section").outerHeight());
+
+			//lottie로딩
+			var animation = lottie.loadAnimation({
+		        container: document.getElementById("resultLottie"), // the dom element that will contain the animation
+		        renderer: 'svg',
+		        loop: false,
+		        autoplay: true,
+		        path: 'resources/img/lottie/MLB_V_Motion.json', // the path to the animation json
+		    });
+			
+			animation.addEventListener("complete", function() {
+				$(".contents_section").stop().animate({
+					opacity : 1
+				}, 800);
+			});
+			
+			clearInterval(sizing);
+		}
+	}, 1);
+});
+</script>
+</head>
+<body>
+<div class="result_container">
+	<section class="result_lottie_section">
+		<div class="lottie_table">
+			<div class="lottie_td">
+				<div id="resultLottie"></div>
+			</div>
+		</div>
+	</section>
+	<section class="contents_section">
+		<div class="comment_box">
+			<p class="bold_font">1번째 확인입니다.</p>
+			<p class="gray_font">MLB 정품을 구매해주셔서 감사합니다.</p>
+		</div>
+		<a class="btn_black">제품 상세 정보</a>
+		<a class="btn_black">다른 제품의 QR코드 스캔</a>
+	</section>
+</div>
+</body>
+</html>
