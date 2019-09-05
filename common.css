@@ -1,0 +1,19 @@
+@charset "UTF-8";
+@font-face {
+	font-family: 'noto-sans cjk kr'; /* 폰트 패밀리 이름 주기*/
+	src: url('../font/NotoSansCJKkr-Regular.otf'); /*폰트 파일 주소*/
+}
+
+html, body {font-family: 'noto-sans cjk kr' !important;}
+html, body, p, ul, li {margin: 0; padding: 0;}
+
+/* button */
+.btn_black {background-color:#000; color:#fff; text-align:center; display:inline-block; font-size:16px; cursor:pointer;}
+
+/* font */
+.small_font {font-size:13px; font-weight: lighter;}
+
+.bold_font {font-size:14px; font-weight:bold;}
+.gray_font {font-size:14px; font-weight:lighter; color:#4d4d4d;}
+
+.important_font {font-size:17px; font-weight:bold;}
